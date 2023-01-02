@@ -2,7 +2,6 @@ package com.survivalcoding.maskinfo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.survivalcoding.maskinfo.adapter.MaskStockAdapter
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 
