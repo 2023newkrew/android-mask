@@ -1,7 +1,11 @@
 package com.survivalcoding.maskinfo
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,8 +35,14 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = recyclerAdapter
 
-        viewModel.infoListLiveData.observe(this){ infoList ->
+        viewModel.infoListLiveData.observe(this) { infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE_LOCATION)
+            }
         }
 
         // TODO delete
