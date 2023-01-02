@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.infoListLiveData.observe(this){ infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
         }
+
+        // TODO delete
+        viewModel.loadInfoList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
