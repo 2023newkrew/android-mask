@@ -1,5 +1,6 @@
 package com.survivalcoding.maskinfo
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
@@ -10,6 +11,7 @@ class MainViewModel : ViewModel() {
         Info("약국4", "주소4", 1f, 50),
         Info("약국5", "주소5", 1f, 100)
     )
+    var infoListLiveData = MutableLiveData(infoList)
 }
 
 data class Info(val name: String, val address: String, val distance: Float, var stock: Int)
