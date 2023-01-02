@@ -24,7 +24,7 @@ import java.net.URL
 
 class MainViewModel : ViewModel() {
     var userCoordinate: Coordinate? = null
-    val infoList = ArrayList<Info>()
+    var infoList = ArrayList<Info>()
     var infoListLiveData = MutableLiveData(infoList)
     val recyclerAdapter: RecyclerAdapter by lazy { RecyclerAdapter() }
 
@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
             val conn: HttpURLConnection = withContext(Dispatchers.IO) {
                 URL(URL_MASK).openConnection()
             } as HttpURLConnection
-
+            infoList = ArrayList()
             try {
                 if (conn.responseCode in 200..300) {
                     val text = conn.inputStream.bufferedReader().use(BufferedReader::readText)
@@ -61,9 +61,9 @@ class MainViewModel : ViewModel() {
                 conn.disconnect()
             }
 
+            infoList.sortBy { it.distance }
             if (firstTime) recyclerAdapter.notifyItemRangeInserted(0, infoList.size)
             else recyclerAdapter.notifyItemRangeChanged(0, infoList.size)
-            println("done")
             infoListLiveData.postValue(infoList)
         }
     }
