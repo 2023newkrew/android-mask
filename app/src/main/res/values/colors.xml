@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="toolbar_background">#ff0098f7</color>
+    <color name="sufficient_green">#ff00e299</color>
+    <color name="spare_yellow">#ffffd100</color>
+    <color name="insufficient_red">#ffff0066</color>
+    <color name="normal_text_color">#ffaaaeb0</color>
 </resources>
