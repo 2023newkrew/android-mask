@@ -5,26 +5,25 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val recyclerAdapter: RecyclerAdapter by lazy { RecyclerAdapter() }
+    private val fusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +32,19 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = recyclerAdapter
+        recyclerView.adapter = viewModel.recyclerAdapter
 
         viewModel.infoListLiveData.observe(this) { infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE_LOCATION)
-            }
-        }
+        checkLocationPermission()
+        viewModel.loadInfoList(true)
+    }
 
-        // TODO delete
-        viewModel.loadInfoList()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        checkLocationPermission()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -54,48 +52,23 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    inner class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
-        inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val nameTextView: TextView = itemView.findViewById(R.id.name_text_view)
-            val addressTextView: TextView = itemView.findViewById(R.id.address_text_view)
-            val distanceTextView: TextView = itemView.findViewById(R.id.distance_text_view)
-            val enoughTextView: TextView = itemView.findViewById(R.id.enough_text_view)
-            val stockTextView: TextView = itemView.findViewById(R.id.stock_text_view)
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.refresh) viewModel.loadInfoList(false)
+        return super.onOptionsItemSelected(item)
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
-            return RecyclerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.recycler_info, parent, false))
-        }
-
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-            holder.nameTextView.text = viewModel.infoList[position].name
-            holder.addressTextView.text = viewModel.infoList[position].address
-            holder.distanceTextView.text = "${viewModel.infoList[position].distance}km"
-            when (viewModel.infoList[position].stock) {
-                in 0 until 30 -> {
-                    holder.enoughTextView.text = "소진 임박"
-                    holder.stockTextView.text = "30개 미만"
-                    holder.enoughTextView.setTextColor(Color.RED)
-                    holder.stockTextView.setTextColor(Color.RED)
-                }
-                in 30 until 100 -> {
-                    holder.enoughTextView.text = "여유"
-                    holder.stockTextView.text = "30개 이상"
-                    holder.enoughTextView.setTextColor(Color.YELLOW)
-                    holder.stockTextView.setTextColor(Color.YELLOW)
-                }
-                else -> {
-                    holder.enoughTextView.text = "충분"
-                    holder.stockTextView.text = "100개 이상"
-                    holder.enoughTextView.setTextColor(Color.GREEN)
-                    holder.stockTextView.setTextColor(Color.GREEN)
+    private fun checkLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE_LOCATION)
+            } else {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                    location?.let { viewModel.userCoordinate = Coordinate(location.latitude, location.longitude) }
                 }
             }
         }
-
-        override fun getItemCount(): Int {
-            return viewModel.infoList.size
+        else{
+            // TODO get permission under M
         }
     }
 }
