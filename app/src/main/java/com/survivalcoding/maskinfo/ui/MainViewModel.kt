@@ -2,8 +2,6 @@ package com.survivalcoding.maskinfo.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.survivalcoding.maskinfo.Configs.Companion.URL_MASK
 import com.survivalcoding.maskinfo.data.Coordinate
 import com.survivalcoding.maskinfo.data.Info
@@ -12,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
@@ -35,24 +34,23 @@ class MainViewModel : ViewModel() {
             try {
                 if (conn.responseCode in 200..300) {
                     val text = conn.inputStream.bufferedReader().use(BufferedReader::readText)
-                    val jsonArray = Gson().fromJson(JSONObject(text).get("stores").toString(), JsonArray::class.java)
-
-                    for (jsonElement in jsonArray) {
-                        val jsonObject = jsonElement.asJsonObject
+                    val jsonArray = JSONObject(text).getJSONArray("stores")
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
 
                         try {
                             val info = Info(
-                                jsonObject.get("name").asString,
-                                jsonObject.get("addr").asString,
-                                jsonObject.get("remain_stat").asString,
-                                Coordinate(jsonObject.get("lat").asDouble, jsonObject.get("lng").asDouble),
+                                jsonObject.get("name") as String,
+                                jsonObject.get("addr") as String,
+                                jsonObject.get("remain_stat") as String,
+                                Coordinate(jsonObject.get("lat") as Double, jsonObject.get("lng") as Double),
                                 userCoordinate
                             )
                             if (info.stock != "break") infoList.add(info)
                         } catch (exception: Exception) { // case invalid data
                             when (exception) {
-                                is UnsupportedOperationException -> println(exception.stackTrace)
-                                is NullPointerException -> println(exception.stackTrace)
+                                is ClassCastException -> println(exception.stackTrace)
+                                is JSONException -> println(exception.stackTrace)
                                 else -> println(exception.stackTrace)
                             }
                         }
