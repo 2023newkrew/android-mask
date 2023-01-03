@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         dummyList.add(MaskStock("판교 아지트", "성남시 분당구", 5000, 30))
 
         val maskStockRecyclerView = binding.maskStockRecyclerView
-        val maskStockAdapter = MaskStockAdapter(this, dataset = dummyList)
+        val maskStockAdapter = MaskStockAdapter(dataset = dummyList)
         maskStockRecyclerView.adapter = maskStockAdapter
 
         binding.toolbar.title = getString(R.string.title, dummyList.size)
