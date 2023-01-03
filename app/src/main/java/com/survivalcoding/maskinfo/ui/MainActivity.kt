@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
@@ -32,13 +33,22 @@ class MainActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = viewModel.infoListAdapter
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                val itemTotalCount = recyclerView.adapter?.itemCount ?: 0
+                if (lastVisibleItemPosition == itemTotalCount - 1) viewModel.loadInfoList(false)
+            }
+        })
 
         viewModel.infoListLiveData.observe(this) { infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
         }
 
         checkLocationPermission()
-        viewModel.loadInfoList()
+        viewModel.loadInfoList(true)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -52,7 +62,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.refresh) viewModel.loadInfoList()
+        if (item.itemId == R.id.refresh) {
+            binding.recyclerView.smoothScrollToPosition(0)
+            viewModel.loadInfoList(true)
+        }
         return super.onOptionsItemSelected(item)
     }
 

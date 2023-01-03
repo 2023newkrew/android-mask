@@ -23,14 +23,20 @@ class MainViewModel : ViewModel() {
     val infoListAdapter: InfoListAdapter by lazy { InfoListAdapter() }
 
     var userCoordinate: Coordinate? = null
+    var currentPage = 1
 
-    fun loadInfoList() {
+    fun loadInfoList(initialize: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
+            if (initialize) {
+                infoList = ArrayList()
+                currentPage = 1
+            }
+
+            val urlStringBuilder = StringBuilder(URL_MASK).append("?page=${currentPage++}&limit=20")
             val conn: HttpURLConnection = withContext(Dispatchers.IO) {
-                URL(URL_MASK).openConnection()
+                URL(urlStringBuilder.toString()).openConnection()
             } as HttpURLConnection
 
-            infoList = ArrayList()
             try {
                 if (conn.responseCode in 200..300) {
                     val text = conn.inputStream.bufferedReader().use(BufferedReader::readText)
