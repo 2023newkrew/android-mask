@@ -52,7 +52,7 @@ class MainViewModel : ViewModel() {
                                 Coordinate(jsonObject.get("lat") as Double, jsonObject.get("lng") as Double),
                                 userCoordinate
                             )
-                            if (info.stock != "break") infoList.add(info)
+                            if (info.stock != "break" && info.stock != "empty") infoList.add(info)
                         } catch (exception: Exception) { // case invalid data
                             when (exception) {
                                 is ClassCastException -> println(exception.stackTrace)
