@@ -1,23 +1,22 @@
-package com.survivalcoding.maskinfo
+package com.survivalcoding.maskinfo.ui
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
+import com.survivalcoding.maskinfo.R
+import com.survivalcoding.maskinfo.data.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -32,14 +31,14 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = viewModel.recyclerAdapter
+        recyclerView.adapter = viewModel.infoListAdapter
 
         viewModel.infoListLiveData.observe(this) { infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
         }
 
         checkLocationPermission()
-        viewModel.loadInfoList(true)
+        viewModel.loadInfoList()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.refresh) viewModel.loadInfoList(false)
+        if (item.itemId == R.id.refresh) viewModel.loadInfoList()
         return super.onOptionsItemSelected(item)
     }
 
@@ -66,8 +65,7 @@ class MainActivity : AppCompatActivity() {
                     location?.let { viewModel.userCoordinate = Coordinate(location.latitude, location.longitude) }
                 }
             }
-        }
-        else{
+        } else {
             // TODO get permission under M
         }
     }
