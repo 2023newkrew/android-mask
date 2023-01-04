@@ -17,7 +17,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.Coordinate
+import com.survivalcoding.maskinfo.data.model.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data
+package com.survivalcoding.maskinfo.data.model
 
 data class Coordinate(
     val latitude: Double,
