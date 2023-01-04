@@ -1,6 +1,6 @@
 package com.survivalcoding.maskinfo.data.model
 
-data class Store (
+data class Store(
     var addr: String = "",
     var code: String = "",
     var created_at: String = "",
@@ -10,4 +10,5 @@ data class Store (
     var remain_stat: String = "",
     var stock_at: String = "",
     var type: String = "",
+    val id: Int = 1
 )
