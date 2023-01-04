@@ -16,12 +16,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val dummyList = ArrayList<MaskStock>()
-        dummyList.add(MaskStock("판교 아지트", "성남시 분당구 판교로 판교역 동편 테스트", 5000, 150))
-        dummyList.add(MaskStock("판교 아지트", "성남시 분당구", 5000, 29))
-        dummyList.add(MaskStock("판교 아지트", "성남시 분당구", 5000, 30))
+        dummyList.add(MaskStock("판교 아지트", "성남시 분당구 판교로 판교역 동편 테스트", 5000, MaskStockStatus.Sufficient))
+        dummyList.add(MaskStock("판교 아지트", "성남시 분당구", 5000, MaskStockStatus.InSufficient))
+        dummyList.add(MaskStock("판교 아지트", "성남시 분당구", 5000, MaskStockStatus.Spare))
 
         val maskStockRecyclerView = binding.maskStockRecyclerView
-        val maskStockAdapter = MaskStockAdapter(this, dataset = dummyList)
+        val maskStockAdapter = MaskStockAdapter( dataset = dummyList)
         maskStockRecyclerView.adapter = maskStockAdapter
 
         binding.toolbar.title = getString(R.string.title, dummyList.size)
