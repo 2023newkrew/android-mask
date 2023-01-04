@@ -1,6 +1,6 @@
 package com.survivalcoding.maskinfo
 
-import com.survivalcoding.maskinfo.data.model.ResultGetMaskStock
+import com.survivalcoding.maskinfo.data.dto.ResultGetMaskStock
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

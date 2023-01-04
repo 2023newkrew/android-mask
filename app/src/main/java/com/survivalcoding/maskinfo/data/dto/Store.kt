@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.model
+package com.survivalcoding.maskinfo.data.dto
 
 data class Store(
     val addr: String?,
@@ -10,7 +10,4 @@ data class Store(
     val remain_stat: String?,
     val stock_at: String?,
     val type: String?,
-) {
-    fun isNotNull() =
-        null in setOf<Any?>(addr, code, created_at, lat, lng, name, remain_stat, stock_at, type)
-}
+)

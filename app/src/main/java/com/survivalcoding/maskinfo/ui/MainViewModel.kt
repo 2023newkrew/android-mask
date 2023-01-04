@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.survivalcoding.maskinfo.RetrofitObject
+import com.survivalcoding.maskinfo.data.dto.ResultGetMaskStock
 import com.survivalcoding.maskinfo.data.model.MaskStock
 import com.survivalcoding.maskinfo.data.model.MaskStockStatus
-import com.survivalcoding.maskinfo.data.model.ResultGetMaskStock
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
