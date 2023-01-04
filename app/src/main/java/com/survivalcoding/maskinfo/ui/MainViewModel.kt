@@ -2,11 +2,10 @@ package com.survivalcoding.maskinfo.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.model.Coordinate
 import com.survivalcoding.maskinfo.data.model.Info
 import com.survivalcoding.maskinfo.data.repository.InfoRepository
-import com.survivalcoding.maskinfo.ui.adapter.InfoListAdapter
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -15,9 +14,7 @@ import java.io.IOException
 class MainViewModel : ViewModel() {
     private val infoRepository: InfoRepository by lazy { InfoRepository() }
     private var infoList: ArrayList<Info> = ArrayList()
-
     var infoListLiveData = MutableLiveData(infoList)
-    val infoListAdapter: InfoListAdapter by lazy { InfoListAdapter() }
 
     var userCoordinate: Coordinate? = null
     private var currentPage = 1
@@ -28,7 +25,7 @@ class MainViewModel : ViewModel() {
             currentPage = 1
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 infoRepository.getInfoList(infoList, currentPage++, userCoordinate)
             } catch (exception: Exception) {
@@ -39,7 +36,6 @@ class MainViewModel : ViewModel() {
                     else -> println(exception.stackTrace)
                 }
             }
-            infoListAdapter.submitList(infoList.toMutableList())
             infoListLiveData.postValue(infoList)
         }
     }
