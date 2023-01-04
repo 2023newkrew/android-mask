@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">MaskInfo</string>
+
     <string name="refresh">refresh</string>
+
+    <string name="enough_few">소진 임박</string>
+    <string name="enough_some">여유</string>
+    <string name="enough_plenty">충분</string>
+
+    <string name="stock_few">30개 미만</string>
+    <string name="stock_some">30개 이상</string>
+    <string name="stock_plenty">100개 이상</string>
 </resources>
