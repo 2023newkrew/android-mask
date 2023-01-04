@@ -1,20 +1,14 @@
-package com.survivalcoding.maskinfo.adapter
+package com.survivalcoding.maskinfo.ui.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.survivalcoding.maskinfo.MaskStock
+import com.survivalcoding.maskinfo.data.model.MaskStock
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.MaskStockItemBinding
 
 class MaskStockAdapter(private val dataset: ArrayList<MaskStock>) :
     RecyclerView.Adapter<MaskStockAdapter.ViewHolder>() {
-
 
     class ViewHolder(val binding: MaskStockItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -25,7 +19,6 @@ class MaskStockAdapter(private val dataset: ArrayList<MaskStock>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.binding.maskStock = dataset[position]
     }
 
