@@ -5,7 +5,7 @@ import com.survivalcoding.maskinfo.R
 data class MaskStock(
     val place: String,
     val address: String,
-    val distance: Int,
+    val distance: Double,
     val status: MaskStockStatus
 ) {
     fun statusString(): String = when (status) {

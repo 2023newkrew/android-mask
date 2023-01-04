@@ -10,10 +10,16 @@ import com.survivalcoding.maskinfo.data.model.ResultGetMaskStock
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class MainViewModel : ViewModel() {
     val dataList = ArrayList<MaskStock>()
     val dataListLiveData = MutableLiveData<List<MaskStock>>()
+    var myLat: Double = 37.394940490775 //판교역 위도
+    var myLng: Double = 127.110105738
 
     fun loadStores() {
         dataList.clear()
@@ -23,8 +29,25 @@ class MainViewModel : ViewModel() {
                 call: Call<ResultGetMaskStock>,
                 response: Response<ResultGetMaskStock>
             ) {
+
                 for (data in response.body()?.stores ?: emptyList()) {
-                    dataList.add(MaskStock(data.name, data.addr, 5000, MaskStockStatus.Sufficient))
+                    if (data.name != null && data.addr != null && data.lat != null
+                        && data.lng != null && data.remain_stat != null
+                    ) {
+                        dataList.add(
+                            MaskStock(
+                                data.name,
+                                data.addr,
+                                calculateDistance(data.lat, data.lng),
+                                when (data.remain_stat) {
+                                    "plenty" -> MaskStockStatus.Sufficient
+                                    "break" -> MaskStockStatus.InSufficient
+                                    "some" -> MaskStockStatus.Spare
+                                    else -> MaskStockStatus.InSufficient //TODO 예외처리
+                                }
+                            )
+                        )
+                    }
                 }
                 dataListLiveData.postValue(dataList)
             }
@@ -34,5 +57,22 @@ class MainViewModel : ViewModel() {
                 Log.e("retrofit onFailure", "$t")
             }
         })
+    }
+
+    fun calculateDistance(
+        lat: Double,
+        lng: Double
+    ): Double {
+        val earthRadius = 6371000.0 //meters
+        val dLat = Math.toRadians((lat - myLat))
+        val dLng = Math.toRadians((lng - myLng))
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(myLat)) * cos(
+            Math.toRadians(lat)
+        ) *
+                sin(dLng / 2) * sin(dLng / 2)
+        val c =
+            2 * atan2(sqrt(a), sqrt(1 - a))
+        return (earthRadius * c)
     }
 }

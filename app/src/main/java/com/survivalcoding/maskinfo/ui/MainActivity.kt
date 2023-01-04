@@ -19,8 +19,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        //test
-
         val maskStockRecyclerView = binding.maskStockRecyclerView
         val maskStockAdapter = MaskStockAdapter(viewModel.dataList)
         maskStockRecyclerView.adapter = maskStockAdapter
@@ -31,8 +29,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.loadStores()
-        //
-
 
     }
 }
