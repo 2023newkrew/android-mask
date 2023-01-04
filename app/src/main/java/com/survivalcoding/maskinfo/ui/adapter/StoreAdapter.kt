@@ -2,13 +2,15 @@ package com.survivalcoding.maskinfo.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.survivalcoding.maskinfo.data.model.MaskStock
 import com.survivalcoding.maskinfo.R
+import com.survivalcoding.maskinfo.data.model.Store
 import com.survivalcoding.maskinfo.databinding.MaskStockItemBinding
 
-class MaskStockAdapter(private val dataset: ArrayList<MaskStock>) :
-    RecyclerView.Adapter<MaskStockAdapter.ViewHolder>() {
+class StoreAdapter :
+    PagingDataAdapter<Store, StoreAdapter.ViewHolder>(diffCallback) {
 
     class ViewHolder(val binding: MaskStockItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -19,11 +21,19 @@ class MaskStockAdapter(private val dataset: ArrayList<MaskStock>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.maskStock = dataset[position]
+        holder.binding.store = getItem(position)
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<Store>() {
+            override fun areItemsTheSame(oldItem: Store, newItem: Store): Boolean {
+                return oldItem.code == newItem.code
+            }
+
+            override fun areContentsTheSame(oldItem: Store, newItem: Store): Boolean {
+                return oldItem.code == newItem.code
+            }
+        }
     }
 
 }

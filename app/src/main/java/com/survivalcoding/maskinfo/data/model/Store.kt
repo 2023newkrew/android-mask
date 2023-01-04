@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.dto
+package com.survivalcoding.maskinfo.data.model
 
 data class Store(
     val addr: String?,
@@ -10,4 +10,5 @@ data class Store(
     val remain_stat: String?,
     val stock_at: String?,
     val type: String?,
+    var distance: Float?
 )

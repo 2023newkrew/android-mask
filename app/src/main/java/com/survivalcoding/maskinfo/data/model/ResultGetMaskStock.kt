@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.dto
+package com.survivalcoding.maskinfo.data.model
 
 data class ResultGetMaskStock(
     val count: Int,

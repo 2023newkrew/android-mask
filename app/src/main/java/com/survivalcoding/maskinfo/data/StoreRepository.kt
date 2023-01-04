@@ -1,30 +1,15 @@
-package com.survivalcoding.maskinfo
+package com.survivalcoding.maskinfo.data
 
-import com.survivalcoding.maskinfo.data.dto.ResultGetMaskStock
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.survivalcoding.maskinfo.data.model.Store
+import kotlinx.coroutines.flow.Flow
 
-interface MaskApiService {
-    @GET("mask")
-    fun getInfo(
-        @Query("accept") accept: String = "application/json",
-    ): Call<ResultGetMaskStock>
-}
-
-object RetrofitObject {
-    private const val BASE_URL = "http://104.198.248.76:3000/"
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    fun getApiService(): MaskApiService {
-        return getRetrofit().create(MaskApiService::class.java)
+class StoreRepository(private val storeService: StoreService) {
+    fun getPagingStore(): Flow<PagingData<Store>> {
+        return Pager(PagingConfig(pageSize = 20)) {
+            StorePagingSource(storeService)
+        }.flow
     }
 }
