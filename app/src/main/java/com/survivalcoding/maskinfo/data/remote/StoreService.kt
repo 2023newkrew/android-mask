@@ -19,6 +19,11 @@ interface StoreService {
         @Query("accept") accept: String = "application/json",
     ): ResultGetMaskStock
 
+    @GET("mask")
+    suspend fun getAllResultMaskStock(
+        @Query("accept") accept: String = "application/json",
+    ): ResultGetMaskStock
+
     companion object {
         private const val BASE_URL = "http://104.198.248.76:3000/"
 

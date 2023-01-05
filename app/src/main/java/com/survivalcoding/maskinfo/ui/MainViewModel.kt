@@ -13,13 +13,15 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private val storeRepository = StoreRepository(StoreService.create())
+    var myLat: Float = 37.394940f
+    var myLng: Float = 127.11010f
 
     private var _maskStocks = MutableLiveData<List<MaskStock>>()
     val maskStocks: LiveData<List<MaskStock>> = _maskStocks
 
-    fun load(page: Int) {
+    fun load() {
         viewModelScope.launch(Dispatchers.IO) {
-            _maskStocks.postValue(storeRepository.maskStores(page).mapNotNull { it.toMaskStock() })
+            _maskStocks.postValue(storeRepository.maskStores().mapNotNull { it.toMaskStock(myLat, myLng) }.sortedBy { it.distance })
         }
     }
 
