@@ -1,18 +1,25 @@
 package com.survivalcoding.maskinfo.data.repository
 
-import com.survivalcoding.maskinfo.data.model.PhotoResult
-import kotlinx.serialization.decodeFromString
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.survivalcoding.maskinfo.data.remote.dto.PhotoResult
+import com.survivalcoding.maskinfo.data.remote.PhotoApi
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType
+import retrofit2.Retrofit
+import retrofit2.create
 
+@OptIn(ExperimentalSerializationApi::class)
 class PhotoRepository {
-    var count = 0
 
-    fun getPhotos(query: String): PhotoResult {
-        return Json.decodeFromString(mockJsonString)
-    }
+    private val api: PhotoApi = Retrofit.Builder()
+        .baseUrl(PhotoApi.BASE_URL)
+        .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
+        .build()
+        .create()
 
-    fun increase() {
-        count++
+    suspend fun getPhotos(query: String): PhotoResult {
+        return api.getPhotos(query = query)
     }
 
 }
