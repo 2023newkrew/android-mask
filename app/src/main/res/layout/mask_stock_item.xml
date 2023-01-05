@@ -8,7 +8,7 @@
 
         <variable
             name="maskStock"
-            type="com.survivalcoding.maskinfo.MaskStock" />
+            type="com.survivalcoding.maskinfo.data.model.MaskStock" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
