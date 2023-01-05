@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +23,18 @@ class MainActivity : AppCompatActivity() {
     }
     private val viewModel: MainViewModel by viewModels()
 
-    private val fusedLocationClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(
+            this
+        )
+    }
 
     override fun onStart() {
         super.onStart()
         locationPermissionRequest.launch(
             arrayOf(
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
     }
@@ -38,23 +43,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        loadMyLocation()
+        viewModel.load()
 
         val maskStockRecyclerView = binding.maskStockRecyclerView
         val maskStockAdapter = MaskStockAdapter()
         maskStockRecyclerView.adapter = maskStockAdapter
 
-        loadMyLocation()
-        viewModel.load()
 
         viewModel.maskStocks.observe(this) {
             maskStockAdapter.submitList(it.toMutableList()) {
                 binding.toolbar.title = getString(R.string.title, maskStockAdapter.itemCount)
             }
         }
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_search -> {
+                    loadMyLocation()
+                    viewModel.load()
+                }
+            }
+            true
+        }
     }
 
     fun loadMyLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -69,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.myLat = it.latitude.toFloat()
                 viewModel.myLng = it.longitude.toFloat()
             }
+            Log.d("tag", "${viewModel.myLat}, ${viewModel.myLng}")
         }
     }
 
@@ -77,9 +99,13 @@ class MainActivity : AppCompatActivity() {
     ) { permissions ->
         if (Build.VERSION.SDK_INT >= 24) {
             when {
-                permissions.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false) ||
-                        permissions.getOrDefault(android.Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    // Only approximate location access granted.
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                        permissions.getOrDefault(
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            false
+                        ) -> {
+                    loadMyLocation()
+                    viewModel.load()
                 }
                 else -> {
                     // No location access granted.

@@ -10,5 +10,4 @@ data class Store(
     val remain_stat: String?,
     val stock_at: String?,
     val type: String?,
-    var distance: Float?
 )
