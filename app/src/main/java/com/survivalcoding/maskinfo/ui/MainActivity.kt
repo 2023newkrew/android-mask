@@ -17,8 +17,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.Configs.Companion.PERMISSION_REQUEST_CODE_LOCATION
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.Coordinate
+import com.survivalcoding.maskinfo.data.model.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
+import com.survivalcoding.maskinfo.ui.adapter.InfoListAdapter
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -29,10 +30,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val infoListAdapter: InfoListAdapter by lazy { InfoListAdapter() }
         val recyclerView = binding.recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = viewModel.infoListAdapter
+        recyclerView.adapter = infoListAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -45,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.infoListLiveData.observe(this) { infoList ->
             title = "마스크 재고 있는 곳: ${infoList.size}"
+            infoListAdapter.submitList(infoList.toMutableList())
         }
 
         checkLocationPermission()
