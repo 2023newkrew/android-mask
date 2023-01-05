@@ -15,7 +15,8 @@ import java.io.IOException
 class MainViewModel : ViewModel() {
     private val infoRepository: InfoRepository by lazy { InfoRepository() }
     private var infoList: ArrayList<Info> = ArrayList()
-    var infoListLiveData = MutableLiveData(infoList)
+    private var _infoListLiveData = MutableLiveData(infoList)
+    val infoListLiveData = _infoListLiveData
 
     var userCoordinate: Coordinate? = null
     private var currentPage = 1
@@ -39,7 +40,7 @@ class MainViewModel : ViewModel() {
                     else -> println(exception.stackTrace)
                 }
             }
-            infoListLiveData.postValue(infoList)
+            _infoListLiveData.postValue(infoList)
         }
     }
 }
