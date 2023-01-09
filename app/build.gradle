@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
 }
 
 android {
@@ -35,9 +34,6 @@ android {
         viewBinding true
         dataBinding true
     }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
 
 }
 
@@ -48,17 +44,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.activity:activity-ktx:1.6.1'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-
-    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
-
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:logging-interceptor")
 }

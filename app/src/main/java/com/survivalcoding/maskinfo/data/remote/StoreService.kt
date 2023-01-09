@@ -1,6 +1,6 @@
-package com.survivalcoding.maskinfo.data
+package com.survivalcoding.maskinfo.data.remote
 
-import com.survivalcoding.maskinfo.data.model.ResultGetMaskStock
+import com.survivalcoding.maskinfo.data.remote.dto.ResultGetMaskStock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,6 +16,11 @@ interface StoreService {
     suspend fun getResultMaskStock(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
+        @Query("accept") accept: String = "application/json",
+    ): ResultGetMaskStock
+
+    @GET("mask")
+    suspend fun getAllResultMaskStock(
         @Query("accept") accept: String = "application/json",
     ): ResultGetMaskStock
 

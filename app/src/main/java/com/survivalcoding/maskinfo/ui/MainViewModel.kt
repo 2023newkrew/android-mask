@@ -1,29 +1,28 @@
 package com.survivalcoding.maskinfo.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import com.survivalcoding.maskinfo.MaskInfoApplication
 import com.survivalcoding.maskinfo.data.StoreRepository
+import com.survivalcoding.maskinfo.data.model.MaskStock
+import com.survivalcoding.maskinfo.data.remote.StoreService
+import com.survivalcoding.maskinfo.data.remote.mapper.toMaskStock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainViewModel(
-    private val storeRepository: StoreRepository
-) : ViewModel() {
-    var myLat: Double = 37.394940490775 //판교역 위도
-    var myLng: Double = 127.110105738
+class MainViewModel : ViewModel() {
+    private val storeRepository = StoreRepository(StoreService.create())
+    var myLat: Float = 37.394940f
+    var myLng: Float = 127.11010f
 
-    val pagingStores = storeRepository.getPagingStore().cachedIn(viewModelScope)
+    private var _maskStocks = MutableLiveData<List<MaskStock>>()
+    val maskStocks: LiveData<List<MaskStock>> = _maskStocks
 
-}
-
-class MainViewModelFactory(private val application: MaskInfoApplication) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MainViewModel(application.storeRepository) as T
+    fun load() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _maskStocks.postValue(storeRepository.maskStores().mapNotNull { it.toMaskStock(myLat, myLng) }.sortedBy { it.distance })
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
+
 }
