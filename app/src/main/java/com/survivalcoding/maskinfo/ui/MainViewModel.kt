@@ -1,38 +1,34 @@
 package com.survivalcoding.maskinfo.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.model.Photo
 import com.survivalcoding.maskinfo.data.remote.mapper.toPhoto
 import com.survivalcoding.maskinfo.data.repository.PhotoRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private val repository = PhotoRepository()
 
-    private var _state = MutableLiveData(MainState())
-    val state: LiveData<MainState> = _state
+    private var _state = MutableStateFlow(MainState())
+    val state: StateFlow<MainState> = _state
 
     init {
         fetchPhotos("apple")
     }
 
-
     fun fetchPhotos(query: String) {
         viewModelScope.launch {
-            _state.postValue(
-                state.value?.copy(isLoading = true)
-            )
+            _state.value = state.value.copy(isLoading = true)
 
             val result = repository.getPhotos(query)
 
-            _state.postValue(
-                state.value?.copy(
-                    photos = result.hits.map { it.toPhoto() },
-                    isLoading = false,
-                )
+            _state.value = state.value.copy(
+                photos = result.hits.map { it.toPhoto() },
+                isLoading = false,
             )
         }
     }

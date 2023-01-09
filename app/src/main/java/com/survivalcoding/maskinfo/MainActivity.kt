@@ -3,7 +3,13 @@ package com.survivalcoding.maskinfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.survivalcoding.maskinfo.ui.MainViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel>()
@@ -12,14 +18,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.state.observe(this) { state ->
-            if (state.isLoading) {
-                // progress on
-            } else {
-                // progress off
-            }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collectLatest { state ->
+                    if (state.isLoading) {
+                        // progress on
+                    } else {
+                        // progress off
+                    }
 
-            println("photos : ${state.photos}")
+                    println("photos : ${state.photos}")
+                }
+            }
         }
+
     }
 }
