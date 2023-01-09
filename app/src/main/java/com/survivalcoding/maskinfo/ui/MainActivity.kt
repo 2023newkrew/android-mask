@@ -89,15 +89,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        checkLocationPermission()
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
