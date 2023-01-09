@@ -3,7 +3,6 @@ package com.survivalcoding.maskinfo.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
@@ -97,20 +96,19 @@ class MainActivity : AppCompatActivity() {
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        if (Build.VERSION.SDK_INT >= 24) {
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
-                        permissions.getOrDefault(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            false
-                        ) -> {
-                    loadMyLocation()
-                    viewModel.load()
-                }
-                else -> {
-                    // No location access granted.
-                }
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                    permissions.getOrDefault(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        false
+                    ) -> {
+                loadMyLocation()
+                viewModel.load()
+            }
+            else -> {
+                // No location access granted.
             }
         }
+
     }
 }
