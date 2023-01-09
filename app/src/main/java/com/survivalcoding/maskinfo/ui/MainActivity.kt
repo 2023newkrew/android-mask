@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.survivalcoding.maskinfo.MaskInfoApplication
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 import com.survivalcoding.maskinfo.ui.adapter.MaskStockAdapter
@@ -25,7 +26,9 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory((this.application as MaskInfoApplication).storeRepository)
+    }
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(

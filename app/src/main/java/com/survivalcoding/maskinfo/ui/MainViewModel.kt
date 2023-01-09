@@ -1,6 +1,7 @@
 package com.survivalcoding.maskinfo.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.StoreRepository
 import com.survivalcoding.maskinfo.data.model.MaskStock
@@ -10,8 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val storeRepository = StoreRepository(StoreService.create())
+class MainViewModel(private val storeRepository: StoreRepository) : ViewModel() {
     var myLat: Float = 37.394940f
     var myLng: Float = 127.11010f
 
@@ -26,7 +26,17 @@ class MainViewModel : ViewModel() {
             )
         }
     }
+}
 
+class MainViewModelFactory(private val storeRepository: StoreRepository) :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MainViewModel(storeRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }
 
 data class MainUiState(
