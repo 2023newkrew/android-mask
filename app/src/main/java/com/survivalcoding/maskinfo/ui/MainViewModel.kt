@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.model.Coordinate
 import com.survivalcoding.maskinfo.data.model.Info
+import com.survivalcoding.maskinfo.data.model.mapper.toInfo
 import com.survivalcoding.maskinfo.data.repository.InfoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +15,8 @@ import java.io.IOException
 class MainViewModel : ViewModel() {
     private val infoRepository: InfoRepository by lazy { InfoRepository() }
     private var infoList: ArrayList<Info> = ArrayList()
-    var infoListLiveData = MutableLiveData(infoList)
+    private var _infoListLiveData = MutableLiveData(infoList)
+    val infoListLiveData = _infoListLiveData
 
     var userCoordinate: Coordinate? = null
     private var currentPage = 1
@@ -24,10 +26,12 @@ class MainViewModel : ViewModel() {
             infoList = ArrayList()
             currentPage = 1
         }
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                infoRepository.getInfoList(infoList, currentPage++, userCoordinate)
+                infoRepository.getMask(currentPage++).stores.forEach {
+                    it.toInfo(userCoordinate)?.let { info -> infoList.add(info) }
+                }
+                // infoList.sortBy { it.distance }
             } catch (exception: Exception) {
                 when (exception) { // case invalid data
                     is ClassCastException -> println(exception.stackTrace)
@@ -36,7 +40,7 @@ class MainViewModel : ViewModel() {
                     else -> println(exception.stackTrace)
                 }
             }
-            infoListLiveData.postValue(infoList)
+            _infoListLiveData.postValue(infoList)
         }
     }
 }
