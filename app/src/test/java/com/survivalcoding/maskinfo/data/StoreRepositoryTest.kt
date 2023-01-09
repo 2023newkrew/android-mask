@@ -2,15 +2,15 @@ package com.survivalcoding.maskinfo.data
 
 import com.survivalcoding.maskinfo.data.remote.StoreService
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-
 import org.junit.After
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
+@Suppress("NonAsciiCharacters")
 class StoreRepositoryTest {
-    lateinit var storeService: StoreService
-    lateinit var storeRepository: StoreRepository
+    private lateinit var storeService: StoreService
+    private lateinit var storeRepository: StoreRepository
 
     @Before
     fun setUp() {
@@ -29,7 +29,7 @@ class StoreRepositoryTest {
     }
 
     @Test
-    fun `약국과 상태가 매칭되는지`() = runBlocking {
+    fun `약국과 상태가 매칭가되는지`() = runBlocking {
         val testStores = storeRepository.maskStores()
         assertEquals(true, testStores.any { it.name == "건강비타민약국" && it.remain_stat == "plenty" })
     }

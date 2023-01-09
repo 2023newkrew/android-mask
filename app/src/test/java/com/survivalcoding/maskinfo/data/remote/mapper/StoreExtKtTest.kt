@@ -6,6 +6,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+@Suppress("NonAsciiCharacters", "SpellCheckingInspection")
 class StoreExtKtTest {
 
     @Before
@@ -25,14 +26,16 @@ class StoreExtKtTest {
 
     @Test
     fun `Store의 lat가 null일 때 toMaskStock이 null 반환 하는지`() {
-        val dummyStore = Store("dummy", "dummy", "dummy", null, 0.0, "dummy", "dummy", "dummy", "dummy")
+        val dummyStore =
+            Store("dummy", "dummy", "dummy", null, 0.0, "dummy", "dummy", "dummy", "dummy")
 
         Assert.assertEquals(null, dummyStore.toMaskStock(0.0f, 0.0f))
     }
 
     @Test
     fun `Store의 lng가 null일 때 toMaskStock이 null 반환 하는지`() {
-        val dummyStore = Store("dummy", "dummy", "dummy", 0.0, null, "dummy", "dummy", "dummy", "dummy")
+        val dummyStore =
+            Store("dummy", "dummy", "dummy", 0.0, null, "dummy", "dummy", "dummy", "dummy")
 
         Assert.assertEquals(null, dummyStore.toMaskStock(0.0f, 0.0f))
     }
