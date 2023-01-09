@@ -11,6 +11,9 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,6 +23,7 @@ import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.data.model.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 import com.survivalcoding.maskinfo.ui.adapter.InfoListAdapter
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -45,9 +49,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.infoListLiveData.observe(this) { infoList ->
-            title = "마스크 재고 있는 곳: ${infoList.size}"
-            infoListAdapter.submitList(infoList.toMutableList())
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    title = "마스크 재고 있는 곳: ${state.infoList.size}"
+                    infoListAdapter.submitList(state.infoList)
+                }
+            }
         }
 
         checkLocationPermission()
@@ -78,7 +86,8 @@ class MainActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE_LOCATION)
             } else {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    location?.let { viewModel.userCoordinate = Coordinate(location.latitude, location.longitude) }
+                    location?.let {
+                        viewModel.userCoordinate = Coordinate(location.latitude, location.longitude) }
                 }
             }
         } else {
