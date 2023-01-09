@@ -14,7 +14,9 @@ class PhotoRepository {
 
     private val api: PhotoApi = Retrofit.Builder()
         .baseUrl(PhotoApi.BASE_URL)
-        .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
+        .addConverterFactory(Json {
+            ignoreUnknownKeys = true
+        }.asConverterFactory(MediaType.get("application/json")))
         .build()
         .create()
 

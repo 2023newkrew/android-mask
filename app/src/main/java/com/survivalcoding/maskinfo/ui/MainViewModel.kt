@@ -12,14 +12,33 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val repository = PhotoRepository()
 
-    private var _photos = MutableLiveData(listOf<Photo>())
-    val photos: LiveData<List<Photo>> = _photos
+    private var _state = MutableLiveData(MainState())
+    val state: LiveData<MainState> = _state
+
+    init {
+        fetchPhotos("apple")
+    }
+
 
     fun fetchPhotos(query: String) {
         viewModelScope.launch {
+            _state.postValue(
+                state.value?.copy(isLoading = true)
+            )
+
             val result = repository.getPhotos(query)
 
-            _photos.postValue(result.hits.map { it.toPhoto() })
+            _state.postValue(
+                state.value?.copy(
+                    photos = result.hits.map { it.toPhoto() },
+                    isLoading = false,
+                )
+            )
         }
     }
 }
+
+data class MainState(
+    val photos: List<Photo> = listOf(),
+    val isLoading: Boolean = false,
+)
