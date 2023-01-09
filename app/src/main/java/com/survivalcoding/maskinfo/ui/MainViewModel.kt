@@ -1,14 +1,13 @@
 package com.survivalcoding.maskinfo.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.StoreRepository
 import com.survivalcoding.maskinfo.data.model.MaskStock
 import com.survivalcoding.maskinfo.data.remote.StoreService
 import com.survivalcoding.maskinfo.data.remote.mapper.toMaskStock
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -16,13 +15,20 @@ class MainViewModel : ViewModel() {
     var myLat: Float = 37.394940f
     var myLng: Float = 127.11010f
 
-    private var _maskStocks = MutableLiveData<List<MaskStock>>()
-    val maskStocks: LiveData<List<MaskStock>> = _maskStocks
+    private var _mainUiState = MutableStateFlow(MainUiState())
+    val mainUiState = _mainUiState.asStateFlow()
 
     fun load() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _maskStocks.postValue(storeRepository.maskStores().mapNotNull { it.toMaskStock(myLat, myLng) }.sortedBy { it.distance })
+        viewModelScope.launch {
+            _mainUiState.value = mainUiState.value.copy(
+                maskStocks = storeRepository.maskStores()
+                    .mapNotNull { it.toMaskStock(myLat, myLng) }.sortedBy { it.distance }
+            )
         }
     }
 
 }
+
+data class MainUiState(
+    val maskStocks: List<MaskStock> = emptyList()
+)

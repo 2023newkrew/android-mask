@@ -9,11 +9,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 import com.survivalcoding.maskinfo.ui.adapter.MaskStockAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,11 +55,17 @@ class MainActivity : AppCompatActivity() {
         maskStockRecyclerView.adapter = maskStockAdapter
 
 
-        viewModel.maskStocks.observe(this) {
-            maskStockAdapter.submitList(it.toMutableList()) {
-                binding.toolbar.title = getString(R.string.title, maskStockAdapter.itemCount)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.mainUiState.collectLatest {
+                    maskStockAdapter.submitList(it.maskStocks.toMutableList()) {
+                        binding.toolbar.title =
+                            getString(R.string.title, maskStockAdapter.itemCount)
+                    }
+                }
             }
         }
+
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_search -> {
