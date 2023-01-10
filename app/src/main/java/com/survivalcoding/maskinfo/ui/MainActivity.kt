@@ -3,25 +3,32 @@ package com.survivalcoding.maskinfo.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.survivalcoding.maskinfo.MaskInfoApplication
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 import com.survivalcoding.maskinfo.ui.adapter.MaskStockAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory((this.application as MaskInfoApplication).storeRepository)
+    }
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
@@ -51,11 +58,17 @@ class MainActivity : AppCompatActivity() {
         maskStockRecyclerView.adapter = maskStockAdapter
 
 
-        viewModel.maskStocks.observe(this) {
-            maskStockAdapter.submitList(it.toMutableList()) {
-                binding.toolbar.title = getString(R.string.title, maskStockAdapter.itemCount)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.mainUiState.collectLatest {
+                    maskStockAdapter.submitList(it.maskStocks.toMutableList()) {
+                        binding.toolbar.title =
+                            getString(R.string.title, maskStockAdapter.itemCount)
+                    }
+                }
             }
         }
+
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_search -> {
@@ -97,20 +110,19 @@ class MainActivity : AppCompatActivity() {
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        if (Build.VERSION.SDK_INT >= 24) {
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
-                        permissions.getOrDefault(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            false
-                        ) -> {
-                    loadMyLocation()
-                    viewModel.load()
-                }
-                else -> {
-                    // No location access granted.
-                }
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                    permissions.getOrDefault(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        false
+                    ) -> {
+                loadMyLocation()
+                viewModel.load()
+            }
+            else -> {
+                // No location access granted.
             }
         }
+
     }
 }
