@@ -1,8 +1,9 @@
 package com.survivalcoding.maskinfo.data.repository
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.survivalcoding.maskinfo.data.remote.dto.PhotoResult
-import com.survivalcoding.maskinfo.data.remote.PhotoApi
+import com.survivalcoding.maskinfo.data.data_source.remote.dto.PhotoResult
+import com.survivalcoding.maskinfo.data.data_source.remote.PhotoApi
+import com.survivalcoding.maskinfo.domain.repository.PhotoRepository
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
@@ -10,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 @OptIn(ExperimentalSerializationApi::class)
-class PhotoRepository {
+class PhotoRepositoryImpl : PhotoRepository {
 
     private val api: PhotoApi = Retrofit.Builder()
         .baseUrl(PhotoApi.BASE_URL)
@@ -20,7 +21,7 @@ class PhotoRepository {
         .build()
         .create()
 
-    suspend fun getPhotos(query: String): PhotoResult {
+    override suspend fun getPhotos(query: String): PhotoResult {
         return api.getPhotos(query = query)
     }
 

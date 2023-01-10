@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo
+package com.survivalcoding.maskinfo.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,8 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.survivalcoding.maskinfo.ui.MainViewModel
-import kotlinx.coroutines.flow.collect
+import com.survivalcoding.maskinfo.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

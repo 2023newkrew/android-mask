@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.model
+package com.survivalcoding.maskinfo.domain.model
 
 data class Photo(
     val id: Int,

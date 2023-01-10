@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.remote.dto
+package com.survivalcoding.maskinfo.data.data_source.remote.dto
 
 import kotlinx.serialization.Serializable
 

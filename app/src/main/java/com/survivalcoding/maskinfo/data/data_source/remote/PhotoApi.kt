@@ -1,6 +1,6 @@
-package com.survivalcoding.maskinfo.data.remote
+package com.survivalcoding.maskinfo.data.data_source.remote
 
-import com.survivalcoding.maskinfo.data.remote.dto.PhotoResult
+import com.survivalcoding.maskinfo.data.data_source.remote.dto.PhotoResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 
