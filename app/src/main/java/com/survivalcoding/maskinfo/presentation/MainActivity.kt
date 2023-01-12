@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.survivalcoding.maskinfo.App
 import com.survivalcoding.maskinfo.R
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -32,14 +33,27 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collectLatest { state ->
-                    if (state.isLoading) {
-                        // progress on
-                    } else {
-                        // progress off
-                    }
+                launch {
+                    viewModel.state.collectLatest { state ->
+                        if (state.isLoading) {
+                            // progress on
+                        } else {
+                            // progress off
+                        }
 
-                    println("photos : ${state.photos}")
+                        println("MainActivity photos : ${state.photos}")
+                    }
+                }
+
+                launch {
+                    viewModel.event.collect { event ->
+                        when (event) {
+                            MainUiEvent.DataLoadSuccess -> println("MainActivity : 로드 성공")
+                            is MainUiEvent.ShowSnackBar -> {
+                                println("MainActivity 스넥바 : ${event.message}")
+                            }
+                        }
+                    }
                 }
             }
         }

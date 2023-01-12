@@ -1,7 +1,7 @@
 package com.survivalcoding.maskinfo.domain.repository
 
 import com.survivalcoding.maskinfo.domain.model.Photo
-import com.survivalcoding.maskinfo.domain.util.MyResult
+import com.survivalcoding.maskinfo.util.MyResult
 
 interface PhotoRepository {
 
