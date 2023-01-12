@@ -1,8 +1,8 @@
 package com.survivalcoding.maskinfo.domain.repository
 
-import com.survivalcoding.maskinfo.data.data_source.remote.dto.PhotoResult
+import com.survivalcoding.maskinfo.domain.model.Photo
 
 interface PhotoRepository {
 
-    suspend fun getPhotos(query: String): PhotoResult
+    suspend fun getPhotos(query: String): Result<List<Photo>>
 }
