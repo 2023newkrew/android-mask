@@ -2,9 +2,7 @@ package com.survivalcoding.maskinfo.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.survivalcoding.maskinfo.data.repository.BadRequestError
-import com.survivalcoding.maskinfo.data.repository.NetworkError
-import com.survivalcoding.maskinfo.data.repository.ServerError
+import com.survivalcoding.maskinfo.data.repository.PhotoException
 import com.survivalcoding.maskinfo.domain.use_case.GetPhotosUseCase
 import com.survivalcoding.maskinfo.domain.util.MyResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,8 +24,16 @@ class MainViewModel(
         viewModelScope.launch {
             _state.value = state.value.copy(isLoading = true)
 
-            when (val result = getPhotosUseCase(query)) {
+            val result = getPhotosUseCase(query)
+
+            when (result) {
                 is MyResult.Error -> {
+                    when (result.e) {
+                        is PhotoException.ServerException -> println(result.e.message)
+                        is PhotoException.BadRequestException -> println(result.e.message)
+                        is PhotoException.Exception -> println(result.e.message)
+                        is PhotoException.NetworkException -> println(result.e.message)
+                    }
                     println(result.e.message)
                 }
                 is MyResult.Success -> {

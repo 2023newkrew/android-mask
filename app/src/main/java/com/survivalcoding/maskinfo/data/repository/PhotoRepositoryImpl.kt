@@ -1,7 +1,6 @@
 package com.survivalcoding.maskinfo.data.repository
 
 import com.survivalcoding.maskinfo.data.data_source.remote.PhotoApi
-import com.survivalcoding.maskinfo.data.data_source.remote.dto.PhotoResult
 import com.survivalcoding.maskinfo.data.data_source.remote.mapper.toPhoto
 import com.survivalcoding.maskinfo.domain.model.Photo
 import com.survivalcoding.maskinfo.domain.repository.PhotoRepository
@@ -20,17 +19,20 @@ class PhotoRepositoryImpl(
                 MyResult.Success(photos)
             } else {
                 when (response.code()) {
-                    400 -> MyResult.Error(BadRequestError("리퀘스트 잘못"))
-                    500 -> MyResult.Error(ServerError("서버 먹통"))
-                    else -> MyResult.Error(Exception("실패"))
+                    400 -> MyResult.Error(PhotoException.BadRequestException("리퀘스트 잘못"))
+                    500 -> MyResult.Error(PhotoException.ServerException("서버 먹통"))
+                    else -> MyResult.Error(PhotoException.Exception("실패"))
                 }
             }
         } catch (e: Exception) {
-            return MyResult.Error(NetworkError("네트워크 에러"))
+            return MyResult.Error(PhotoException.NetworkException("네트워크 에러"))
         }
     }
 }
 
-class ServerError(message: String) : Exception(message)
-class BadRequestError(message: String) : Exception(message)
-class NetworkError(message: String) : Exception(message)
+sealed class PhotoException(message: String) : Exception(message) {
+    class ServerException(message: String) : PhotoException(message)
+    class BadRequestException(message: String) : PhotoException(message)
+    class NetworkException(message: String) : PhotoException(message)
+    class Exception(message: String) : PhotoException(message)
+}
