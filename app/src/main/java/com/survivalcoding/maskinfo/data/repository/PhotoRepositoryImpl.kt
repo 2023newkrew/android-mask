@@ -5,27 +5,28 @@ import com.survivalcoding.maskinfo.data.data_source.remote.dto.PhotoResult
 import com.survivalcoding.maskinfo.data.data_source.remote.mapper.toPhoto
 import com.survivalcoding.maskinfo.domain.model.Photo
 import com.survivalcoding.maskinfo.domain.repository.PhotoRepository
+import com.survivalcoding.maskinfo.domain.util.MyResult
 
 class PhotoRepositoryImpl(
     private val api: PhotoApi
 ) : PhotoRepository {
 
-    override suspend fun getPhotos(query: String): Result<List<Photo>> {
+    override suspend fun getPhotos(query: String): MyResult<List<Photo>> {
         try {
             val response = api.getPhotos(query = query)
 
             return if (response.isSuccessful) {
                 val photos = response.body()?.hits?.map { it.toPhoto() } ?: emptyList()
-                Result.success(photos)
+                MyResult.Success(photos)
             } else {
                 when (response.code()) {
-                    400 -> Result.failure(BadRequestError("리퀘스트 잘못"))
-                    500 -> Result.failure(ServerError("서버 먹통"))
-                    else -> Result.failure(Exception("실패"))
+                    400 -> MyResult.Error(BadRequestError("리퀘스트 잘못"))
+                    500 -> MyResult.Error(ServerError("서버 먹통"))
+                    else -> MyResult.Error(Exception("실패"))
                 }
             }
         } catch (e: Exception) {
-            return Result.failure(NetworkError("네트워크 에러"))
+            return MyResult.Error(NetworkError("네트워크 에러"))
         }
     }
 }
