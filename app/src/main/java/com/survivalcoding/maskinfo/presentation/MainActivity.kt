@@ -1,44 +1,36 @@
 package com.survivalcoding.maskinfo.presentation
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.survivalcoding.maskinfo.App
 import com.survivalcoding.maskinfo.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel by viewModels<MainViewModel> {
-        MainViewModelFactory(application as App)
-    }
-
-    class MainViewModelFactory(private val application: App) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-
-                @Suppress("UNCHECKED_CAST")
-                return MainViewModel(application.getPhotoUseCase) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val contents = findViewById<TextView>(R.id.contents_text_view)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.state.collectLatest { state ->
                         if (state.isLoading) {
-                            // progress on
+                            contents.text = "로딩 중"
                         } else {
                             // progress off
+                            contents.text = state.photos.toString()
                         }
 
                         println("MainActivity photos : ${state.photos}")

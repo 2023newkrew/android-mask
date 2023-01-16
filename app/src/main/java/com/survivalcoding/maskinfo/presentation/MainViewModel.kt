@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.domain.use_case.GetPhotosUseCase
 import com.survivalcoding.maskinfo.util.MyResult
 import com.survivalcoding.maskinfo.util.PhotoException
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getPhotosUseCase: GetPhotosUseCase
 ) : ViewModel() {
 

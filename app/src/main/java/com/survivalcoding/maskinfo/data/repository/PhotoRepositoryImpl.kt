@@ -6,8 +6,9 @@ import com.survivalcoding.maskinfo.domain.model.Photo
 import com.survivalcoding.maskinfo.domain.repository.PhotoRepository
 import com.survivalcoding.maskinfo.util.MyResult
 import com.survivalcoding.maskinfo.util.PhotoException
+import javax.inject.Inject
 
-class PhotoRepositoryImpl(
+class PhotoRepositoryImpl @Inject constructor(
     private val api: PhotoApi
 ) : PhotoRepository {
 
