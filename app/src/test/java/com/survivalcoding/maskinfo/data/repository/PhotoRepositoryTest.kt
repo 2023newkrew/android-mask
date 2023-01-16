@@ -1,5 +1,8 @@
 package com.survivalcoding.maskinfo.data.repository
 
+import com.survivalcoding.maskinfo.domain.model.Photo
+import com.survivalcoding.maskinfo.domain.repository.PhotoRepository
+import com.survivalcoding.maskinfo.util.MyResult
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 
@@ -7,8 +10,15 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+class MockPhotoRepository : PhotoRepository {
+    override suspend fun getPhotos(query: String): MyResult<List<Photo>> {
+        TODO("Not yet implemented")
+    }
+
+}
+
 class PhotoRepositoryTest {
-    private val repository = PhotoRepository()
+    private val repository = MockPhotoRepository()
 
     @Test
     fun `사진 정보를 잘 가져와야 한다`() = runBlocking {
