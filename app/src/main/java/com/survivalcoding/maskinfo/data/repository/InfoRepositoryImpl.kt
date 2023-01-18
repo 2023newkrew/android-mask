@@ -1,7 +1,8 @@
 package com.survivalcoding.maskinfo.data.repository
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.survivalcoding.maskinfo.Configs.Companion.URL_BASE
+import com.survivalcoding.maskinfo.URL_BASE
+import com.survivalcoding.maskinfo.domain.repository.InfoRepository
 import com.survivalcoding.maskinfo.retrofit.MaskService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -9,7 +10,7 @@ import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.create
 
-class InfoRepository {
+class InfoRepositoryImpl : InfoRepository {
     @OptIn(ExperimentalSerializationApi::class)
     private val maskService: MaskService by lazy {
         Retrofit.Builder()
@@ -19,5 +20,5 @@ class InfoRepository {
             .create()
     }
 
-    suspend fun getMask(currentPage: Int) = maskService.getMask(currentPage, 20)
+    override suspend fun getMask(currentPage: Int) = maskService.getMask(currentPage, 20)
 }

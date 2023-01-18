@@ -1,6 +1,6 @@
 package com.survivalcoding.maskinfo.retrofit
 
-import com.survivalcoding.maskinfo.data.model.dto.Mask
+import com.survivalcoding.maskinfo.data.dto.Mask
 import retrofit2.http.GET
 import retrofit2.http.Query
 

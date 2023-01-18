@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation.main
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.model.Coordinate
+import com.survivalcoding.maskinfo.domain.model.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
-import com.survivalcoding.maskinfo.ui.adapter.InfoListAdapter
+import com.survivalcoding.maskinfo.presentation.adapter.InfoListAdapter
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

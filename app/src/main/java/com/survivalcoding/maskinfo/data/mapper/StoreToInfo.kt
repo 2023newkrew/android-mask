@@ -1,8 +1,8 @@
-package com.survivalcoding.maskinfo.data.model.mapper
+package com.survivalcoding.maskinfo.data.mapper
 
-import com.survivalcoding.maskinfo.data.model.Coordinate
-import com.survivalcoding.maskinfo.data.model.Info
-import com.survivalcoding.maskinfo.data.model.dto.Store
+import com.survivalcoding.maskinfo.domain.model.Coordinate
+import com.survivalcoding.maskinfo.domain.model.Info
+import com.survivalcoding.maskinfo.data.dto.Store
 
 fun Store.toInfo(userCoordinate: Coordinate?): Info? {
     return if (

@@ -5,7 +5,7 @@ import org.junit.Assert
 import org.junit.Test
 
 class InfoRepositoryTest {
-    private val infoRepository: InfoRepository by lazy { InfoRepository() }
+    private val infoRepository: InfoRepositoryImpl by lazy { InfoRepositoryImpl() }
 
     @Test
     fun testGetInfoList() = runBlocking {

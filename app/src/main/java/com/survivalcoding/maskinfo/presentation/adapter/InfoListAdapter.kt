@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui.adapter
+package com.survivalcoding.maskinfo.presentation.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.model.Info
+import com.survivalcoding.maskinfo.domain.model.Info
 import com.survivalcoding.maskinfo.databinding.ItemInfoBinding
 
 class InfoListAdapter : ListAdapter<Info, InfoListAdapter.ViewHolder>(diffUtil) {
