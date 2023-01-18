@@ -9,16 +9,9 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.create
+import javax.inject.Inject
 
-class InfoRepositoryImpl : InfoRepository {
-    @OptIn(ExperimentalSerializationApi::class)
-    private val maskService: MaskService by lazy {
-        Retrofit.Builder()
-            .baseUrl(URL_BASE)
-            .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
-            .build()
-            .create()
-    }
-
+class InfoRepositoryImpl @Inject constructor(private val maskService: MaskService) :
+    InfoRepository {
     override suspend fun getMask(currentPage: Int) = maskService.getMask(currentPage, 20)
 }

@@ -6,14 +6,17 @@ import com.survivalcoding.maskinfo.domain.model.Coordinate
 import com.survivalcoding.maskinfo.domain.model.Info
 import com.survivalcoding.maskinfo.data.mapper.toInfo
 import com.survivalcoding.maskinfo.data.repository.InfoRepositoryImpl
+import com.survivalcoding.maskinfo.domain.use_case.GetMaskUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import java.io.IOException
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    private val infoRepository: InfoRepositoryImpl by lazy { InfoRepositoryImpl() }
+@HiltViewModel
+class MainViewModel @Inject constructor(private val getMaskUseCase: GetMaskUseCase) : ViewModel() {
     private var _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
     var userCoordinate: Coordinate? = null
@@ -28,7 +31,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val infoList = state.value.infoList.toMutableList()
-                infoRepository.getMask(state.value.currentPage).stores.map {
+                getMaskUseCase(state.value.currentPage).stores.map {
                     it.toInfo(userCoordinate)?.let { info ->
                         infoList.add(info)
                     }

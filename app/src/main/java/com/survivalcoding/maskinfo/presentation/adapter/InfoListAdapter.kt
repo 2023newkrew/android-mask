@@ -14,11 +14,11 @@ class InfoListAdapter : ListAdapter<Info, InfoListAdapter.ViewHolder>(diffUtil) 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<Info>() {
             override fun areItemsTheSame(oldItem: Info, newItem: Info): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
 
             override fun areContentsTheSame(oldItem: Info, newItem: Info): Boolean {
-                return oldItem == newItem
+                return oldItem.hashCode() == newItem.hashCode()
             }
         }
     }
