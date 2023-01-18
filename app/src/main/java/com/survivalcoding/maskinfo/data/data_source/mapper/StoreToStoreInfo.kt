@@ -1,10 +1,10 @@
-package com.survivalcoding.maskinfo.data.model.mapper
+package com.survivalcoding.maskinfo.data.data_source.mapper
 
-import com.survivalcoding.maskinfo.data.model.Coordinate
-import com.survivalcoding.maskinfo.data.model.Info
-import com.survivalcoding.maskinfo.data.model.dto.Store
+import com.survivalcoding.maskinfo.domain.model.Coordinate
+import com.survivalcoding.maskinfo.domain.model.StoreInfo
+import com.survivalcoding.maskinfo.data.data_source.dto.Store
 
-fun Store.toInfo(userCoordinate: Coordinate?): Info? {
+fun Store.toStoreInfo(userCoordinate: Coordinate?): StoreInfo? {
     return if (
         name == null ||
         addr == null ||
@@ -12,7 +12,7 @@ fun Store.toInfo(userCoordinate: Coordinate?): Info? {
         remain_stat == "break" ||
         remain_stat == "empty"
     ) null
-    else Info(
+    else StoreInfo(
         name = name,
         address = addr,
         stock = remain_stat,

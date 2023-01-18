@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui.adapter
+package com.survivalcoding.maskinfo.presentation.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,17 +7,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.model.Info
+import com.survivalcoding.maskinfo.domain.model.StoreInfo
 import com.survivalcoding.maskinfo.databinding.ItemInfoBinding
 
-class InfoListAdapter : ListAdapter<Info, InfoListAdapter.ViewHolder>(diffUtil) {
+class InfoListAdapter : ListAdapter<StoreInfo, InfoListAdapter.ViewHolder>(diffUtil) {
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<Info>() {
-            override fun areItemsTheSame(oldItem: Info, newItem: Info): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<StoreInfo>() {
+            override fun areItemsTheSame(oldItem: StoreInfo, newItem: StoreInfo): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: Info, newItem: Info): Boolean {
+            override fun areContentsTheSame(oldItem: StoreInfo, newItem: StoreInfo): Boolean {
                 return oldItem == newItem
             }
         }

@@ -1,6 +1,6 @@
-package com.survivalcoding.maskinfo.data.model
+package com.survivalcoding.maskinfo.domain.model
 
-data class Info(
+data class StoreInfo(
     val name: String,
     val address: String,
     var stock: String,

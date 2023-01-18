@@ -1,19 +1,21 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.survivalcoding.maskinfo.data.model.Coordinate
-import com.survivalcoding.maskinfo.data.model.Info
-import com.survivalcoding.maskinfo.data.model.mapper.toInfo
-import com.survivalcoding.maskinfo.data.repository.InfoRepository
+import com.survivalcoding.maskinfo.domain.model.Coordinate
+import com.survivalcoding.maskinfo.domain.model.StoreInfo
+import com.survivalcoding.maskinfo.data.repository.InfoRepositoryImpl
+import com.survivalcoding.maskinfo.domain.use_case.GetInfoUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import java.io.IOException
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    private val infoRepository: InfoRepository by lazy { InfoRepository() }
+@HiltViewModel
+class MainViewModel @Inject constructor(private val getInfoUseCase: GetInfoUseCase) : ViewModel() {
     private var _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
     var userCoordinate: Coordinate? = null
@@ -21,20 +23,23 @@ class MainViewModel : ViewModel() {
     fun loadInfoList(initialize: Boolean) {
         if (initialize) {
             _state.value = state.value.copy(
-                infoList = listOf(),
+                storeInfoList = listOf(),
                 currentPage = 1
             )
         }
         viewModelScope.launch {
             try {
-                val infoList = state.value.infoList.toMutableList()
-                infoRepository.getMask(state.value.currentPage).stores.map {
-                    it.toInfo(userCoordinate)?.let { info ->
-                        infoList.add(info)
+                val infoList = state.value.storeInfoList.toMutableList()
+                getInfoUseCase(
+                    currentPage = state.value.currentPage,
+                    userCoordinate = userCoordinate
+                ).map {
+                    if (it != null) {
+                        infoList.add(it)
                     }
                 }
                 _state.value = state.value.copy(
-                    infoList = infoList,
+                    storeInfoList = infoList,
                     currentPage = state.value.currentPage + 1
                 )
             } catch (exception: Exception) {
@@ -50,6 +55,6 @@ class MainViewModel : ViewModel() {
 }
 
 data class MainState(
-    val infoList: List<Info> = listOf(),
+    val storeInfoList: List<StoreInfo> = listOf(),
     val currentPage: Int = 1
 )

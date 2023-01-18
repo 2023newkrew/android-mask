@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -19,11 +19,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.model.Coordinate
+import com.survivalcoding.maskinfo.domain.model.Coordinate
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
-import com.survivalcoding.maskinfo.ui.adapter.InfoListAdapter
+import com.survivalcoding.maskinfo.presentation.adapter.InfoListAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -69,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
-                    title = "마스크 재고 있는 곳: ${state.infoList.size}"
-                    infoListAdapter.submitList(state.infoList)
+                    title = "마스크 재고 있는 곳: ${state.storeInfoList.size}"
+                    infoListAdapter.submitList(state.storeInfoList)
                 }
             }
         }
