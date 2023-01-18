@@ -13,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ object AppModule {
             .baseUrl(PhotoApi.BASE_URL)
             .addConverterFactory(Json {
                 ignoreUnknownKeys = true
-            }.asConverterFactory(MediaType.get("application/json")))
+            }.asConverterFactory("application/json".toMediaType()))
             .build()
             .create()
     }

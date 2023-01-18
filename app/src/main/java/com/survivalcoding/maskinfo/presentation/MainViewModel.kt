@@ -25,16 +25,22 @@ class MainViewModel @Inject constructor(
     val event = _event.asSharedFlow()
 
     init {
-        fetchPhotos("apple")
+        fetchPhotos()
     }
 
-    fun fetchPhotos(query: String) {
+    fun changeQuery(query: String) {
+        _state.value = state.value.copy(
+            query = query
+        )
+    }
+
+    fun fetchPhotos() {
         viewModelScope.launch {
             _event.emit(MainUiEvent.ShowSnackBar("삐그덕"))
 
             _state.value = state.value.copy(isLoading = true)
 
-            val result = getPhotosUseCase(query)
+            val result = getPhotosUseCase(state.value.query)
             _event.emit(MainUiEvent.ShowSnackBar("삐그덕 2"))
 
             when (result) {
