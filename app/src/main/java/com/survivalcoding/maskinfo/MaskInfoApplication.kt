@@ -1,9 +1,9 @@
 package com.survivalcoding.maskinfo
 
 import android.app.Application
-import com.survivalcoding.maskinfo.data.StoreRepository
-import com.survivalcoding.maskinfo.data.remote.StoreService
+import com.survivalcoding.maskinfo.data.repository.StoreRepositoryImpl
+import com.survivalcoding.maskinfo.data.datasource.MaskDataSource
 
 class MaskInfoApplication : Application() {
-    val storeRepository = StoreRepository(StoreService.create())
+    val storeRepositoryImpl = StoreRepositoryImpl(MaskDataSource.create())
 }

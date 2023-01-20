@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.data.remote.dto
+package com.survivalcoding.maskinfo.data.dto
 
 data class Store(
     val addr: String?,

@@ -1,10 +1,9 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation.view
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,9 @@ import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.MaskInfoApplication
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
-import com.survivalcoding.maskinfo.ui.adapter.MaskStockAdapter
+import com.survivalcoding.maskinfo.ui.MainViewModel
+import com.survivalcoding.maskinfo.ui.MainViewModelFactory
+import com.survivalcoding.maskinfo.presentation.adapter.MaskStockAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((this.application as MaskInfoApplication).storeRepository)
+        MainViewModelFactory((this.application as MaskInfoApplication).storeRepositoryImpl)
     }
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
@@ -36,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private val load_data = {
+        loadMyLocation()
+        viewModel.load()
+    }
     override fun onStart() {
         super.onStart()
         locationPermissionRequest.launch(
@@ -50,8 +55,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        loadMyLocation()
-        viewModel.load()
+        load_data()
 
         val maskStockRecyclerView = binding.maskStockRecyclerView
         val maskStockAdapter = MaskStockAdapter()
@@ -72,15 +76,14 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_search -> {
-                    loadMyLocation()
-                    viewModel.load()
+                    load_data()
                 }
             }
             true
         }
     }
 
-    fun loadMyLocation() {
+    private fun loadMyLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -103,11 +106,11 @@ class MainActivity : AppCompatActivity() {
                 viewModel.myLat = it.latitude.toFloat()
                 viewModel.myLng = it.longitude.toFloat()
             }
-            Log.d("tag", "${viewModel.myLat}, ${viewModel.myLng}")
         }
     }
 
-    val locationPermissionRequest = registerForActivityResult(
+
+    private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
@@ -115,14 +118,11 @@ class MainActivity : AppCompatActivity() {
                     permissions.getOrDefault(
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         false
-                    ) -> {
-                loadMyLocation()
-                viewModel.load()
-            }
+                    ) -> load_data
             else -> {
                 // No location access granted.
             }
         }
-
     }
+
 }

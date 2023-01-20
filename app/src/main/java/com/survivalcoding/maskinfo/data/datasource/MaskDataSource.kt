@@ -1,6 +1,6 @@
-package com.survivalcoding.maskinfo.data.remote
+package com.survivalcoding.maskinfo.data.datasource
 
-import com.survivalcoding.maskinfo.data.remote.dto.ResultGetMaskStock
+import com.survivalcoding.maskinfo.data.dto.ResultGetMaskStock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,13 +11,13 @@ import retrofit2.http.Query
 /**
  * MaskStock API communication setup via Retrofit.
  */
-interface StoreService {
-    @GET("mask")
-    suspend fun getResultMaskStock(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int,
-        @Query("accept") accept: String = "application/json",
-    ): ResultGetMaskStock
+interface MaskDataSource {
+//    @GET("mask")
+//    suspend fun getResultMaskStock(
+//        @Query("page") page: Int,
+//        @Query("limit") limit: Int,
+//        @Query("accept") accept: String = "application/json",
+//    ): ResultGetMaskStock
 
     @GET("mask")
     suspend fun getAllResultMaskStock(
@@ -27,7 +27,7 @@ interface StoreService {
     companion object {
         private const val BASE_URL = "http://104.198.248.76:3000/"
 
-        fun create(): StoreService {
+        fun create(): MaskDataSource {
             val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BASIC
 
@@ -39,7 +39,7 @@ interface StoreService {
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(StoreService::class.java)
+                .create(MaskDataSource::class.java)
         }
     }
 }

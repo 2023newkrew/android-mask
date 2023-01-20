@@ -1,6 +1,8 @@
 package com.survivalcoding.maskinfo.data.remote.mapper
 
-import com.survivalcoding.maskinfo.data.remote.dto.Store
+import com.survivalcoding.maskinfo.data.dto.Store
+import com.survivalcoding.maskinfo.data.mapper.distanceTo
+import com.survivalcoding.maskinfo.data.mapper.toMaskStock
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

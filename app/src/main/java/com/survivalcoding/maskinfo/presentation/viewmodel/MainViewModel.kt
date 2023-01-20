@@ -3,9 +3,9 @@ package com.survivalcoding.maskinfo.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.survivalcoding.maskinfo.data.StoreRepository
-import com.survivalcoding.maskinfo.data.model.MaskStock
-import com.survivalcoding.maskinfo.data.remote.mapper.toMaskStock
+import com.survivalcoding.maskinfo.data.mapper.toMaskStock
+import com.survivalcoding.maskinfo.domain.model.MaskStock
+import com.survivalcoding.maskinfo.domain.repository.StoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
