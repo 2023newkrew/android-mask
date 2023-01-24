@@ -37,18 +37,14 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private val load_data = {
+    private val load_data: () -> Unit = {
         loadMyLocation()
         viewModel.load()
     }
+
     override fun onStart() {
         super.onStart()
-        locationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
+        locationPermissionRequest(load_data)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,11 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_search -> {
-                    load_data()
-                }
-            }
+            if (item.itemId == R.id.menu_search) load_data()
             true
         }
     }
@@ -109,20 +101,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
-                    permissions.getOrDefault(
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        false
-                    ) -> load_data
-            else -> {
-                // No location access granted.
+    private fun locationPermissionRequest(job: () -> Unit) {
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ||
+                        permissions.getOrDefault(
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            false
+                        ) -> job()
+                else -> {
+                    // No location access granted.
+                }
             }
-        }
+        }.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 
 }
