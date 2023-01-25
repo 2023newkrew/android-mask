@@ -1,6 +1,7 @@
 package com.survivalcoding.maskinfo.data
 
 import com.survivalcoding.maskinfo.data.remote.StoreService
+import com.survivalcoding.maskinfo.data.repository.StoreRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*

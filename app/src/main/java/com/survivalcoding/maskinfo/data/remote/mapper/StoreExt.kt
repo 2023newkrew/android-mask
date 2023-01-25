@@ -1,8 +1,8 @@
 package com.survivalcoding.maskinfo.data.remote.mapper
 
-import com.survivalcoding.maskinfo.data.model.MaskStock
-import com.survivalcoding.maskinfo.data.model.MaskStockStatus
 import com.survivalcoding.maskinfo.data.remote.dto.Store
+import com.survivalcoding.maskinfo.domain.model.MaskStock
+import com.survivalcoding.maskinfo.domain.model.MaskStockStatus
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin

@@ -1,7 +1,8 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation
 
-import com.survivalcoding.maskinfo.data.StoreRepository
 import com.survivalcoding.maskinfo.data.remote.StoreService
+import com.survivalcoding.maskinfo.data.repository.StoreRepositoryImpl
+import com.survivalcoding.maskinfo.domain.repository.StoreRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -17,7 +18,7 @@ class MainViewModelTest {
     @Before
     fun setUp() {
         storeService = StoreService.create()
-        storeRepository = StoreRepository(storeService)
+        storeRepository = StoreRepositoryImpl(storeService)
         mainViewModel = MainViewModel(storeRepository)
     }
 

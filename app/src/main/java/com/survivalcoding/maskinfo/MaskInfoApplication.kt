@@ -1,9 +1,8 @@
 package com.survivalcoding.maskinfo
 
 import android.app.Application
-import com.survivalcoding.maskinfo.data.StoreRepository
-import com.survivalcoding.maskinfo.data.remote.StoreService
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MaskInfoApplication : Application() {
-    val storeRepository = StoreRepository(StoreService.create())
 }

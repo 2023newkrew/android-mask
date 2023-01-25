@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui.adapter
+package com.survivalcoding.maskinfo.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.survivalcoding.maskinfo.R
-import com.survivalcoding.maskinfo.data.model.MaskStock
 import com.survivalcoding.maskinfo.databinding.MaskStockItemBinding
+import com.survivalcoding.maskinfo.domain.model.MaskStock
 
 class MaskStockAdapter :
     ListAdapter<MaskStock, MaskStockAdapter.ViewHolder>(diffCallback) {
