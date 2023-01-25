@@ -16,9 +16,9 @@ import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.MaskInfoApplication
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
-import com.survivalcoding.maskinfo.ui.MainViewModel
-import com.survivalcoding.maskinfo.ui.MainViewModelFactory
 import com.survivalcoding.maskinfo.presentation.adapter.MaskStockAdapter
+import com.survivalcoding.maskinfo.presentation.viewmodel.MainViewModel
+import com.survivalcoding.maskinfo.presentation.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

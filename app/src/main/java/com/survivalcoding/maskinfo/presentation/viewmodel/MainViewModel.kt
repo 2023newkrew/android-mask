@@ -1,4 +1,4 @@
-package com.survivalcoding.maskinfo.ui
+package com.survivalcoding.maskinfo.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
