@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.survivalcoding.maskinfo.data.mapper.toMaskStock
-import com.survivalcoding.maskinfo.domain.model.MaskStock
 import com.survivalcoding.maskinfo.domain.repository.StoreRepository
+import com.survivalcoding.maskinfo.presentation.ui_state.MainUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,7 +37,3 @@ class MainViewModelFactory(private val storeRepository: StoreRepository) :
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-data class MainUiState(
-    val maskStocks: List<MaskStock> = emptyList()
-)
