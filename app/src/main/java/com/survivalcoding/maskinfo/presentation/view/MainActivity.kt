@@ -14,17 +14,20 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
+import com.survivalcoding.maskinfo.di.MyApplication
 import com.survivalcoding.maskinfo.presentation.adapter.MaskStockAdapter
 import com.survivalcoding.maskinfo.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val viewModel = MainViewModel()
+    @Inject
+    lateinit var viewModel: MainViewModel
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
@@ -43,6 +46,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Make Dagger instantiate @Inject fields in LoginActivity
+        (applicationContext as MyApplication).appComponent.inject(this)
+        // Now loginViewModel is available
+
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 

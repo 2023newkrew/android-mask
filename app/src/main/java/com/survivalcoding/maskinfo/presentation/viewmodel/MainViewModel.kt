@@ -9,8 +9,9 @@ import com.survivalcoding.maskinfo.presentation.ui_state.MainUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel() : ViewModel() {
+class MainViewModel @Inject constructor() : ViewModel() {
     var myLat: Float = 37.394940f
     var myLng: Float = 127.11010f
     private val storeRepository = StoreRepositoryImpl(MaskDataSource.create())
