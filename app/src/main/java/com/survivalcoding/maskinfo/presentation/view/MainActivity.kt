@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationServices
 import com.survivalcoding.maskinfo.R
 import com.survivalcoding.maskinfo.databinding.ActivityMainBinding
 import com.survivalcoding.maskinfo.di.MyApplication
+import com.survivalcoding.maskinfo.di.component.MainComponent
 import com.survivalcoding.maskinfo.presentation.adapter.MaskStockAdapter
 import com.survivalcoding.maskinfo.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +27,10 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    @Inject
+    lateinit var mainComponent: MainComponent
+
     @Inject
     lateinit var viewModel: MainViewModel
 
@@ -46,7 +51,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as MyApplication).appComponent.inject(this)
+        mainComponent = (applicationContext as MyApplication).appComponent.mainComponent().create()
+        mainComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
