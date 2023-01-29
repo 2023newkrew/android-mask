@@ -1,7 +1,8 @@
 package com.survivalcoding.maskinfo.domain.repository
 
-import com.survivalcoding.maskinfo.data.dto.Store
+import com.survivalcoding.maskinfo.data.repository.StoreRepositoryImpl
+import javax.inject.Inject
 
-interface StoreRepository {
-    suspend fun maskStores(): List<Store>
+class StoreRepository @Inject constructor(private val storeRepositoryImpl: StoreRepositoryImpl) {
+    suspend fun maskStores() = storeRepositoryImpl.maskStores()
 }
